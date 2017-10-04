@@ -1,0 +1,11 @@
+# Sublime project files
+walls.sublime-workspace
+walls.sublime-project
+style.sublime-workspace
+
+# nodejs libraries
+node_modules
+
+# logs
+logs/*
+
