@@ -1,7 +1,7 @@
 var socket;
 var ctx;
 var months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-var weekdays = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+var weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 var oneDay = 24*60*60*1000;
 
 window.onload = function() {
@@ -35,7 +35,7 @@ window.onload = function() {
 
     socket.on('log', function (data) {
         data = JSON.parse(data);
-        console.log(data);
+        //console.log(data);
         var timeline = $(".timeline");
         timeline.empty();
         if(data.log){
@@ -45,8 +45,8 @@ window.onload = function() {
             var currentday = 0;
             var timeData = new Array();
             var daysum = 0;
-            for (var i = 0; i < data.log.page.length; i++){
-                var pagelog = data.log.page[i];
+            for (var i = 0; i < data.log.length; i++){
+                var pagelog = data.log[i];
                 var a = new Date(parseInt(pagelog.start) * 1000);
                 var year = a.getFullYear();
                 var month = a.getMonth();

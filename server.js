@@ -11,6 +11,10 @@ httpServer.listen(httpPort);
 var http_clients = new Array();
 
 var logjson = 0;
+var logcontent = __dirname + '/data/logs.ndjson';
+var logfiles = __dirname + '/data/logfiles.txt';
+
+var aggregate = require('ndjson-aggregator')
 
 function handler (request, response) {
      
@@ -71,9 +75,8 @@ io_base.on('connection', function (socket) {
     socket.emit('ready');
     
     log("new web client: " + socket.id);
-    if(logjson != 0){
-        socket.emit('log', logjson);
-    }
+
+    sendLogData(socket);
 
     socket.on('disconnect', function () {
 
@@ -107,11 +110,36 @@ io_upload.on('connection', function (socket) {
     });
 
     socket.on('data-log', function (data) {
-        logjson = data;
-        io_base.emit('log', data);
+        data = JSON.parse(data);
+        if(!fs.existsSync(logfiles)){
+            fs.openSync(logfiles, 'w');
+        }
+        var buf = fs.readFileSync(logfiles, "utf8");
+        if (buf.toString().indexOf(data.id)<0) {
+            fs.appendFileSync(logfiles, data.id+"\n");
+            fs.appendFile(logcontent, JSON.stringify(data.content)+"\n", function (err) {
+                if (err) throw err;
+                console.log('Saved ' + data.id);
+                socket.emit("received", data.id);
+                sendLogData(io_base);
+            });
+        }else{
+            socket.emit("received", data.id);
+        }
     });
 
 });
+
+function sendLogData(recipient){
+    fs.readFile(logcontent, function(error, content) {
+        var lines = content.toString().split("\n");
+        //remove last empty line
+        lines.pop();
+        var logs = aggregate(lines);
+        var logdata = {"log": logs};
+        recipient.emit('log', JSON.stringify(logdata));
+    });
+}
 
 function log(text) {
     var n = (new Date()).toGMTString();
