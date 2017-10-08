@@ -1,0 +1,11 @@
+[Unit]
+Description=node.js app to receive bookCV stats and display them on a client browser
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/var/www/html/apps/display-bookstats
+ExecStart=/usr/bin/nodejs server.js
+
+[Install]
+WantedBy=multi-user.target
