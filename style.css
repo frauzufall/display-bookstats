@@ -66,21 +66,21 @@ body {
 }
 
 .tooltip {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px; 
-    /* Position the tooltip text - see examples below! */
-    position: absolute;
-    z-index: 1;
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	padding: 5px 0;
+	border-radius: 6px;
+	/* Position the tooltip text - see examples below! */
+	position: absolute;
+	z-index: 1;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
 .timeline .page:hover .tooltip {
-    visibility: visible;
+	visibility: visible;
 }
 
 .graph {
@@ -100,4 +100,21 @@ body {
 #canvas.small {
 	width: 30px;
 	height: 30px;
+}
+
+.month .day {
+	display: none;
+}
+
+.month .name {
+	display: block;
+	border: 1px solid #aaabab;
+	padding: 5px;
+	margin: 5px 0;
+	cursor: pointer;
+}
+
+.month .name::before {
+	content: '\25bc';
+	padding-right: 0.5em;
 }
