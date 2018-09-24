@@ -97,6 +97,21 @@ window.onload = function() {
 			  highlightCircleSize: 5
 		  }});
 
+	var graphPages = new Dygraph(document.getElementById("graph3"),[[0]],{
+		labels: [ "x" ],
+		stackedGraph: false,
+		width: 680,
+		height: 320,
+		stackedGraph: false,
+		highlightCircleSize: 2,
+		strokeWidth: 1,
+		strokeBorderWidth: 1,
+		highlightSeriesOpts: {
+			  strokeWidth: 3,
+			  strokeBorderWidth: 1,
+			  highlightCircleSize: 5
+		  }});
+
 	$("#canvas").on("click", function(){
 		if($(this).hasClass("small")){
 			$(this).removeClass("small");
@@ -140,6 +155,11 @@ window.onload = function() {
 			var weekData = new Array();
 			weekData.push([0,1,2,3,4,5,6]);
 			var currentweek = [0,0,0,0,0,0,0];
+			var pagesData = new Array();
+			var pagesNum = 62;
+			for( var i = 0; i < pagesNum; i++) {
+				pagesData.push([i, 0]);
+			}
 			var daysum = 0;
 			for (var i = 0; i < log.length; i++){
 				var pagelog = log[i];
@@ -178,7 +198,9 @@ window.onload = function() {
 					lastdate = date;
 					lastday = day;
 				}
-				daysum += Math.min(parseFloat(pagelog.end - pagelog.start) / 60., 2.);
+				var assumedViewingTime = Math.min(parseFloat(pagelog.end - pagelog.start) / 60., 2.);
+				daysum += assumedViewingTime;
+				pagesData[parseInt(pagelog.id)][1] += assumedViewingTime;
 				var thisday = new Date(year, month, date);
 				var width = (parseFloat(pagelog.end - pagelog.start)*1000)/parseFloat(oneDay)*100;
 				var left = parseFloat(a - thisday) / parseFloat(oneDay) * 100;
@@ -207,10 +229,11 @@ window.onload = function() {
 					label = 's' + '000'.substr(label.length) + label;
 					labels[i] = label;
 				}
-				console.log(transpose(weekData));
 				graphWeek.updateOptions({'labels': labels.slice()});
 				graphWeek.updateOptions({'file': transpose(weekData)});
 				graphWeek.updateOptions({clickCallback: onclick}, true);
+				graphPages.updateOptions({'labels': ["page number", "viewing time"], 'file': pagesData});
+				graphPages.updateOptions({clickCallback: onclick}, true);
 			}
 		}else{
 			console.log("data.log not found");

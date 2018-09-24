@@ -40,6 +40,8 @@ body {
 
 .timeline {
 	margin: 30px 10px 10px 10px;
+	clear: both;
+	padding-top: 20px;
 }
 
 .timeline .day {
@@ -89,6 +91,10 @@ body {
 	right: 10px;
 	top: 10px;
 	height: 200px;
+}
+
+.graph.inline {
+	float: left;
 }
 
 #canvas {

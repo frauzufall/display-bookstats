@@ -17,11 +17,11 @@ var logfiles = __dirname + '/data/logfiles.txt';
 var aggregate = require('ndjson-aggregator')
 
 function handler (request, response) {
-     
+
     var filePath = '.' + request.url;
     if (filePath == './viewer')
         filePath = './index.html';
-         
+
     var extname = path.extname(filePath);
     var contentType = 'text/html';
     switch (extname) {
@@ -32,9 +32,9 @@ function handler (request, response) {
             contentType = 'text/css';
             break;
     }
-     
+
     fs.exists(filePath, function(exists) {
-     
+
         if (exists) {
             fs.readFile(filePath, function(error, content) {
                 if (error) {
@@ -73,7 +73,7 @@ io_base.on('connection', function (socket) {
 
     //tell socket to initialize
     socket.emit('ready');
-    
+
     log("new web client: " + socket.id);
 
     sendLogData(socket);
@@ -93,7 +93,7 @@ io_upload.on('connection', function (socket) {
 
     //tell socket to initialize
     socket.emit('ready');
-    
+
     log("new upload client: " + socket.id);
 
     socket.on('disconnect', function () {
@@ -132,12 +132,15 @@ io_upload.on('connection', function (socket) {
 
 function sendLogData(recipient){
     fs.readFile(logcontent, function(error, content) {
+      if (error) log(error);
+      if(content !== undefined) {
         var lines = content.toString().split("\n");
         //remove last empty line
         lines.pop();
         var logs = aggregate(lines);
         var logdata = {"log": logs};
         recipient.emit('log', JSON.stringify(logdata));
+      }
     });
 }
 
